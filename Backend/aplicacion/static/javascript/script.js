@@ -27,6 +27,7 @@ function enviarMensaje() {
     const mensaje = document.querySelector('#mensaje');
 
     const data = {
+        data_type : 'message',
         mensaje : mensaje.value,
     }
 
@@ -41,12 +42,12 @@ boton.addEventListener('click', () => {
     enviarMensaje();
 });
 
-function insertarMensaje(mensaje) {
+function insertarMensaje(data) {
     const contenedor = document.querySelector('#contenedor');
     contenedor.innerHTML += `
     <div class="alert alert-primary">
-        <h4>User</h4>
-        <p>${mensaje}</p>
+        <h4>${data.username}</h4>
+        <p>${data.mensaje}</p>
     </div>
     `;
 }
@@ -54,5 +55,13 @@ function insertarMensaje(mensaje) {
 // Esto recibe la información del método "enviar_mensaje".
 websocket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    insertarMensaje(data.mensaje);
+
+    if (data.data_type === 'message') {
+        insertarMensaje(data);
+    }
+
+    else if (data.data_type === 'users') {
+        console.log(data.users)
+    }
+    
 }
